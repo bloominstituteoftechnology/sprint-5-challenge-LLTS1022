@@ -1,6 +1,119 @@
 async function sprintChallenge5() { // Note the async keyword, in case you wish to use `await` inside sprintChallenge5
   // 👇 WORK WORK BELOW THIS LINE 👇
+  async function sprintChallenge5() {
+    const infoParagraph = document.querySelector('.info');
+    const cardsContainer = document.querySelector('.cards');
+    const footer = document.querySelector('footer');
+    
+    footer.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY ${new Date().getFullYear()}`;
 
+    try {
+        const [learnersResponse, mentorsResponse] = await Promise.all([
+            axios.get('/api/learners'),
+            axios.get('/api/mentors')
+        ]);
+
+        const learnersData = learnersResponse.data;
+        const mentorsData = mentorsResponse.data;
+
+        const combinedData = learnersData.map(learner => {
+            const mentors = learner.mentors.map(mentorId => {
+                const mentor = mentorsData.find(m => m.id === mentorId);
+                return mentor ? `${mentor.firstName} ${mentor.lastName}` : '';
+            });
+            return {
+                id: learner.id,
+                fullName: learner.fullName,
+                email: learner.email,
+                mentors: mentors
+            };
+        });
+
+        infoParagraph.textContent = 'Select a learner to view details:';
+        cardsContainer.innerHTML = '';
+
+        combinedData.forEach(learner => {
+            const learnerCard = createLearnerCard(learner);
+            cardsContainer.appendChild(learnerCard);
+        });
+
+        function createLearnerCard(learner) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            const fullNameElement = document.createElement('h3');
+            fullNameElement.textContent = learner.fullName;
+
+            const emailElement = document.createElement('div');
+            emailElement.textContent = learner.email;
+
+            const mentorsHeader = document.createElement('h4');
+            mentorsHeader.classList.add('closed');
+            mentorsHeader.textContent = 'Mentors';
+
+            const mentorsList = document.createElement('ul');
+            learner.mentors.forEach(mentor => {
+                const mentorItem = document.createElement('li');
+                mentorItem.textContent = mentor;
+                mentorsList.appendChild(mentorItem);
+            });
+
+            card.appendChild(fullNameElement);
+            card.appendChild(emailElement);
+            card.appendChild(mentorsHeader);
+            card.appendChild(mentorsList);
+
+            card.addEventListener('click', () => {
+                if (!card.classList.contains('selected')) {
+                    infoParagraph.textContent = `The selected learner is ${learner.fullName}`;
+                    cardsContainer.querySelectorAll('.card').forEach(card => {
+                        card.classList.remove('selected');
+                        card.querySelector('h4').classList.add('closed');
+                    });
+                    card.classList.add('selected');
+                    mentorsHeader.classList.remove('closed');
+                } else {
+                    infoParagraph.textContent = 'No learner is selected.';
+                    card.classList.remove('selected');
+                    mentorsHeader.classList.add('closed');
+                }
+            });
+
+            return card;
+        }
+    } catch (error) {
+        console.error('Error fetching learner data:', error.message);
+        infoParagraph.textContent = 'Something went wrong. Please try again later.';
+    }
+}
+
+sprintChallenge5();
+
+try {
+    module.exports = {
+        sprintChallenge5: sprintChallenge5
+    };
+} catch {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
   function _0x5800() {
     const _0x42e30c = ['classList', 'find', '2197755fshBew', 'replace', '102414WllEmB', 'forEach', '10aZqHZO', 'contains', '.info', 'Something\x20went\x20wrong', '945822yHbMVy', 'querySelector', 'data', 'catch', '.card', 'No\x20learner\x20is\x20selected', '574116dSJNwl', 'email', 'add', 'querySelectorAll', 'addEventListener', '1576254onBLLP', '19734781ufvNmR', '.cards', 'fullName', '7BmgGNN', '14270920obaJCA', 'open', 'remove', 'textContent', 'The\x20selected\x20learner\x20is\x20', 'target', '3dIEhRP', 'then', 'footer', 'get', 'Mentors', 'div', 'split', 'selected', 'closed', 'createElement', '265BTGtwW', 'mentors', 'click', 'appendChild'];
     _0x5800 = function() {
@@ -148,57 +261,10 @@ try {
         'sprintChallenge5': sprintChallenge5
     };
 } catch {}
-
-
-
-//  const infoParagraph = document.querySelector('.info');
-//if (infoParagraph) {
- // infoParagraph.textContent = "No learner is selected";
-//} else {
- // console.error('NOT FOUND');
-//}
-
-  /* ChatGPT
-  const footer = document.querySelector('footer')
-  const currentYear = new Date().getFullYear()
-  footer.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY ${currentYear}`
-  document.addEventListener('DOMContentLoaded', async () => {
-    const cardsContainer = document.querySelector('.cards');
-    const infoParagraph = document.querySelector('.info');
-  
-    // Remove existing learner cards
-    cardsContainer.innerHTML = '';
-  
-    // Display loading message
-    infoParagraph.textContent = 'Fetching learner cards...';
-  
-    try {
-      // Fetch learner cards data asynchronously (replace 'your-api-endpoint' with the actual API endpoint)
-      const response = await fetch('your-api-endpoint');
-      const data = await response.json();
-  
-      // Process the fetched data and update the DOM
-      data.forEach((learner) => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-        card.innerHTML = `
-          <h3>${learner.name}</h3>
-          <div>${learner.email}</div>
-          <h4 class="closed">Mentors</h4>
-          <ul>${learner.mentors.map((mentor) => `<li>${mentor}</li>`).join('')}</ul>
-        `;
-        cardsContainer.appendChild(card);
-      });
-  
-      // Remove loading message
-      infoParagraph.textContent = '';
-    } catch (error) {
-      console.error('Error fetching learner cards:', error.message);
-      // Display an error message if fetching fails
-      infoParagraph.textContent = 'Error fetching learner cards. Please try again later.';
-    }
-  });
 */
+
+
+
 
 
 
