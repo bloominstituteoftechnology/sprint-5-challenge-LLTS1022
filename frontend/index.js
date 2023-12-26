@@ -6,7 +6,7 @@ async function sprintChallenge5() { // Note the async keyword, in case you wish 
     const footer = document.querySelector('footer');
 
     footer.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY ${new Date().getFullYear()}`;
-    infoParagraph.textContent = 'No learner is selected.'; // Set initial text
+    infoParagraph.textContent = 'No learner is selected'; // Set initial text
 
     try {
         const [learnersResponse, mentorsResponse] = await Promise.all([
