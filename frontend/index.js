@@ -4,8 +4,9 @@ async function sprintChallenge5() { // Note the async keyword, in case you wish 
     const infoParagraph = document.querySelector('.info');
     const cardsContainer = document.querySelector('.cards');
     const footer = document.querySelector('footer');
-    
+
     footer.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY ${new Date().getFullYear()}`;
+    infoParagraph.textContent = 'No learner is selected.'; // Set initial text
 
     try {
         const [learnersResponse, mentorsResponse] = await Promise.all([
@@ -29,7 +30,6 @@ async function sprintChallenge5() { // Note the async keyword, in case you wish 
             };
         });
 
-        infoParagraph.textContent = 'Select a learner to view details:';
         cardsContainer.innerHTML = '';
 
         combinedData.forEach(learner => {
