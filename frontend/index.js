@@ -73,7 +73,7 @@ async function sprintChallenge5() { // Note the async keyword, in case you wish 
                     card.classList.add('selected');
                     mentorsHeader.classList.remove('closed');
                 } else {
-                    infoParagraph.textContent = 'No learner is selected.';
+                    infoParagraph.textContent = 'No learner is selected';
                     card.classList.remove('selected');
                     mentorsHeader.classList.add('closed');
                 }
